@@ -19,7 +19,8 @@ module alu
     input logic [1:0]             op_i,
     input logic [DATA_WIDTH-1:0]  data_a_i,
     input logic [DATA_WIDTH-1:0]  data_b_i,
-    output logic [DATA_WIDTH-1:0] data_c_o
+    output logic [DATA_WIDTH-1:0] data_c_o,
+    output logic                  c_o
 
 );
 
@@ -28,11 +29,13 @@ module alu
   always_comb begin
      carry = 1'b0;
      case(op_i) begin
-        2'b00: {carry,data_c_o} = data_a_i + data_b_i;
-        2'b01: {carry,data_c_o} = data_a_i - data_b_i;        
-        2'b10: data_c_o         = data_a_i ^ data_b_i;        
-        2'b11: data_c_o         = data_a_i & data_b_i;        
+        2'b00: {carry,data_c_o} = $signed(data_a_i) + $signed(data_b_i);
+        2'b01: {carry,data_c_o} = $signed(data_a_i) - $signed(data_b_i);
+        2'b10: data_c_o         = data_a_i ^ data_b_i;
+        2'b11: data_c_o         = data_a_i & data_b_i;
      endcase // case (op_i)
   end
-   
+  
+  assign c_o = carry;
+ 
 endmodule
